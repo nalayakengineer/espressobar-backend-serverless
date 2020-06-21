@@ -1,0 +1,29 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+
+service: apollo-lambda
+# app and org for use with dashboard.serverless.com
+app: apollo-lambda
+org: bhushanbharat
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  # you can overwrite defaults here
+  stage: dev
+  region: ap-south-1
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+functions:
+  graphql:
+    handler: server.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
