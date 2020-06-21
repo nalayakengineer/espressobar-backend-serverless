@@ -1,4 +1,4 @@
-# Espresso Bar Apollo GQL backend
+# Espresso Bar Apollo GQL Serverless backend
 
 Disclaimer - this is just a demo site built for demonstration of skills.
 This repository Serves as backend for the front-end developed by <a href="https://github.com/ilakshay14/"><strong>Lakshay</strong></a>.
