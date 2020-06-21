@@ -33,8 +33,8 @@ This repository Serves as backend for the front-end developed by <a href="https:
     <li>"env-cmd": "^5.0.0"</li>
     <li>"imports-loader": "^0.7.1"</li>
     <li>"jsonfile": "^4.0.0"</li>
-    <li>"serverless-offline": "^3.15.3"</li>,
-    <li>"serverless-webpack": "^4.1.0",
+    <li>"serverless-offline": "^3.15.3"</li>
+    <li>"serverless-webpack": "^4.1.0"</li>
     <li>"webpack": "^3.8.1"</li>
     <li>"webpack-node-externals": "^1.6.0"</li>
 </ul>
