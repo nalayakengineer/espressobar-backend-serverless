@@ -1,3 +1,5 @@
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/nalayakengineer/espressobar-backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nalayakengineer/espressobar-backend/alerts/)
+
 # Espresso Bar Apollo GQL Serverless backend
 
 Disclaimer - this is just a demo site built for demonstration of skills.
