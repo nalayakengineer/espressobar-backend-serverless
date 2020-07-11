@@ -14,20 +14,46 @@ provider:
   # you can overwrite defaults here
   stage: dev
   region: ap-south-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["MenuTable", "Arn"] }
+  environment:
+    MENU: ${self:custom.menutable}
 
 plugins:
   - serverless-webpack
-  - serverless-offline
   - serverless-plugin-include-dependencies
+  - serverless-dynamodb-local
+  - serverless-offline #needs to be last in the list so dynamoDB can be started offline for testing**
 
+# Custom Settings
 custom:
+  menutable: "espresso-bar-menu-${self:provider.stage}"
   serverless-offline:
     port: 4000
-  webpackIncludeModules: true
+  #webpackIncludeModules: true
   webpack:
     webpackConfig: "webpack.config.js"
     includeModules: true
     packager: yarn
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      migrate: true
+      inMemory: true
+      convertEmptyValues: true
+
+# GraphQL endpoint Config
 
 functions:
   graphql:
@@ -37,7 +63,21 @@ functions:
           path: graphql
           method: post
           cors: true
-      - http:
-          path: graphql
-          method: get
-          cors: true
+
+# DynamoDB Config
+
+resources:
+  Resources:
+    MenuTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.menutable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
