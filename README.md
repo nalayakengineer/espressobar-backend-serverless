@@ -20,6 +20,10 @@ This repository Serves as backend for the front-end developed by <a href="https:
 2. yarn install ( to install the dependencies)
 3. yarn start
 
+To Deploy on AWS:
+
+1. yarn deploy-live
+
 <h2>Dependecies:</h2>
 <ul>
     <li> "apollo-server-lambda": "^2.2.2"</li>
