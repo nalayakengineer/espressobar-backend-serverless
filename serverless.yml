@@ -29,36 +29,6 @@ provider:
     MENU: ${self:custom.menutable}
     DOMAIN_SUFFIX: espresso-bar
 
-  # Creating Authorizers for application to use login
-  # httpApi:
-  #   authorizers:
-  #     serviceAuthorizer:
-  #       identitySource: $request.header.Authorizarion
-  #       issuerUrl:
-  #         Fn::Join:
-  #           - ""
-  #           - - "https://cognito-idp."
-  #             - "${opt:region, self:provider.region}"
-  #             - ".amazonaws.com/"
-  #             - Ref: serviceUserPool
-  #       audience:
-  #         - Ref: serviceUserPoolClient
-
-# # then add an authorizer you can reference later
-# ApiGatewayAuthorizer:
-#   DependsOn:
-#   # this is pre-defined by serverless
-#   - ApiGatewayRestApi
-#   Type: AWS::ApiGateway::Authorizer
-#   Properties:
-#     Name: cognito_auth
-#     # apparently ApiGatewayRestApi is a global string
-#     RestApiId: { "Ref" : "ApiGatewayRestApi" }
-#     IdentitySource: method.request.header.Authorization
-#     Type: COGNITO_USER_POOLS
-#     ProviderARNs:
-#     - Fn::GetAtt: [CognitoUserPool, Arn]
-
 plugins:
   - serverless-webpack
   - serverless-plugin-include-dependencies
@@ -115,10 +85,8 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    # Cognitor Pool config goes below this
-    # httpApi:
-    #   DependsOn: serviceUserPool
-    #   Type: AWS::ApiGateway::Authorizers
+
+    # Authorizer for Api EP
     ApiGatewayAuthorizer:
       Type: AWS::ApiGateway::Authorizer
       Properties:
@@ -132,6 +100,7 @@ resources:
               - serviceUserPool
               - Arn
 
+    # Cognitor Pool config goes below this
     serviceUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
