@@ -27,6 +27,37 @@ provider:
         - { "Fn::GetAtt": ["MenuTable", "Arn"] }
   environment:
     MENU: ${self:custom.menutable}
+    DOMAIN_SUFFIX: espresso-bar
+
+  # Creating Authorizers for application to use login
+  # httpApi:
+  #   authorizers:
+  #     serviceAuthorizer:
+  #       identitySource: $request.header.Authorizarion
+  #       issuerUrl:
+  #         Fn::Join:
+  #           - ""
+  #           - - "https://cognito-idp."
+  #             - "${opt:region, self:provider.region}"
+  #             - ".amazonaws.com/"
+  #             - Ref: serviceUserPool
+  #       audience:
+  #         - Ref: serviceUserPoolClient
+
+# # then add an authorizer you can reference later
+# ApiGatewayAuthorizer:
+#   DependsOn:
+#   # this is pre-defined by serverless
+#   - ApiGatewayRestApi
+#   Type: AWS::ApiGateway::Authorizer
+#   Properties:
+#     Name: cognito_auth
+#     # apparently ApiGatewayRestApi is a global string
+#     RestApiId: { "Ref" : "ApiGatewayRestApi" }
+#     IdentitySource: method.request.header.Authorization
+#     Type: COGNITO_USER_POOLS
+#     ProviderARNs:
+#     - Fn::GetAtt: [CognitoUserPool, Arn]
 
 plugins:
   - serverless-webpack
@@ -54,7 +85,6 @@ custom:
       convertEmptyValues: true
 
 # GraphQL endpoint Config
-
 functions:
   graphql:
     handler: server.graphqlHandler
@@ -63,11 +93,15 @@ functions:
           path: graphql
           method: post
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
 
-# DynamoDB Config
-
+#AWS Resources
 resources:
   Resources:
+    # DynamoDB Config
     MenuTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -81,3 +115,57 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    # Cognitor Pool config goes below this
+    # httpApi:
+    #   DependsOn: serviceUserPool
+    #   Type: AWS::ApiGateway::Authorizers
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: cognito_auth
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ProviderARNs:
+          - Fn::GetAtt:
+              - serviceUserPool
+              - Arn
+
+    serviceUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: user-pool-${opt:stage, self:provider.region}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+    serviceUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: user-pool-client-${opt:stage, self:provider.stage}
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        UserPoolId:
+          Ref: serviceUserPool
+        CallbackURLs:
+          - https://localhost:3000
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+    serviceUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId:
+          Ref: serviceUserPool
+        Domain: user-pool-domain-${opt:stage, self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}

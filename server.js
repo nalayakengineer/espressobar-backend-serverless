@@ -25,4 +25,14 @@ const server = new ApolloServer({
     // tracing: true,
 });
 
-exports.graphqlHandler = server.createHandler();
+exports.graphqlHandler = server.createHandler({
+    cors: {
+        origin: '*',
+        methods: 'POST',
+        allowedHeaders: [
+            'Content-Type',
+            'Origin',
+            'Accept'
+        ]
+    }
+});
