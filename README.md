@@ -1,5 +1,5 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/nalayakengineer/espressobar-backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nalayakengineer/espressobar-backend/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/nalayakengineer/espressobar-backend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nalayakengineer/espressobar-backend/context:javascript)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/nalayakengineer/espressobar-backend-serverless.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nalayakengineer/espressobar-backend-serverless/context:javascript)
 [![Core](https://img.shields.io/badge/core-Javascript-green)](https://github.com/nalayakengineer/espressobar-backend-serverless)
 [![Framework](https://img.shields.io/badge/Framework-Serverless-green)](https://github.com/nalayakengineer/espressobar-backend-serverless)
 
