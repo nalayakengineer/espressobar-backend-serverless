@@ -1,6 +1,6 @@
 const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const nodeExternals = require('webpack-node-externals');
+//const nodeExternals = require('webpack-node-externals');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const slsw = require('serverless-webpack');
 
