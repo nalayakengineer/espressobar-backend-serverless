@@ -20,7 +20,7 @@
     "serverless-dynamodb-local": "0.2.35"
   },
   "devDependencies": {
-    "aws-sdk": "^2.192.0",
+    "aws-sdk": "^2.814.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-source-map-support": "^2.0.0",
